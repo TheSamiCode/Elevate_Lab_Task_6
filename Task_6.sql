@@ -60,6 +60,23 @@ select * from emp as e where sal=(select max(sal) from emp where deptno=e.deptno
  - sub queries in FROM clause are called derived tables.
 */
 
+--  To display top 3 max salaries ?
+select distinct sal from (select *, dense_rank() over (order by sal desc) as rnk from emp) as E where rnk<=3;
+
+-- Display the employee record whose rank is greater than 5 based on highest salary?
+select * from (select *, dense_rank() over(order by sal desc) as rnk from emp) as E where rnk>5;
+
+
+/* Scalar sub-queries
+---
+-> Sub-queries in SELECT clause are called scalar sub-queries
+*/
+-- Display dept wise total salary ?
+select deptno, sum(sal) from emp where deptno is not null group by deptno;
+
+-- Display DEPTNO, DEPT_TOTSAL, TOTSAL ?
+select deptno, sum(sal)as dept_totsal, (select sum(sal) from emp) as TotalSal from emp group by deptno;
+
 -- Display ranks of the employees based on sal and highest paid should get 1st rank ?	
 select empno, ename, sal, dense_rank() over (order by sal desc) as rnk from emp;
 
@@ -68,6 +85,8 @@ select * FROM (SELECT Empno,Ename,Sal,DENSE_RANK() OVER(ORDER BY Sal DESC) as Rn
 
 -- To display top 3 max salaries ? 
 select DISTINCT Sal FROM (SELECT Sal,DENSE_RANK() OVER(ORDER BY Sal DESC) as Rnk FROM Emp) as E WHERE Rnk<=3 ORDER BY Sal DESC;
+
+
 
 
 
